@@ -3,8 +3,8 @@ config :ash, policies: [show_policy_breakdowns?: true]
 
 # Configure your database
 config :foodmap, Foodmap.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "foodmap_dev",
+  password: "1234",
   hostname: "localhost",
   database: "foodmap_dev",
   stacktrace: true,
