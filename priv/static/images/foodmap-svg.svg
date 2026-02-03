@@ -1,0 +1,15 @@
+<svg width="450" height="100" viewBox="0 0 450 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(10, 20)">
+    <path d="M20 40C20 28.9543 28.9543 20 40 20C51.0457 20 60 28.9543 60 40C60 55 40 75 40 75C40 75 20 55 20 40Z" fill="#84cc16"/>
+    <circle cx="40" cy="40" r="6" fill="white"/>
+  </g>
+
+  <text x="80" y="70" font-family="Arial, sans-serif" font-weight="900" font-size="64" fill="#1e3a8a">Foodmap</text>
+  
+  <g transform="translate(360, 35) scale(0.8)">
+    <path d="M50 15L15 40H0L15 45L10 60L20 55L30 45H60C70 45 75 35 60 30L50 15Z" fill="#3b82f6"/>
+    <path d="M25 40L40 10H50L40 40H25Z" fill="#60a5fa"/> <path d="M25 45L35 65H45L40 45H25Z" fill="#2563eb"/> <path d="M55 15C55 10 60 5 65 5C70 5 75 10 75 15V20H55V15Z" fill="white" stroke="#1e3a8a" stroke-width="2"/>
+  </g>
+  
+  <path d="M345 60C350 60 355 55 360 50" stroke="#1e3a8a" stroke-width="3" stroke-dasharray="4 4" stroke-linecap="round"/>
+</svg>
