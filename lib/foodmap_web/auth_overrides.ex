@@ -38,47 +38,55 @@ defmodule FoodmapWeb.AuthOverrides do
   override AshAuthentication.Phoenix.Components.Password.RegisterForm do
     # This creates the white "box" around your inputs
     set :root_class,
-        "w-full max-w-md bg-white/20 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-white/30 shadow-2xl"
-
-    set :label_class, "text-white text-lg font-bold tracking-wide ml-1"
+        "w-full max-w-2xl bg-white/20 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-white/30 shadow-2xl"
 
     # 2. Input: Large, rounded, and semi-transparent "Glass" style
     # 'p-4' and 'text-xl' make it feel premium and easy to use
     set :input_class, """
-      w-full p-4 text-xl rounded-2xl border-2 border-white/20 
-      bg-white/10 text-white placeholder:text-white/40
-      focus:bg-white/20 focus:border-white/50 focus:ring-0 
-      transition-all duration-200 outline-none
+      w-full p-4 text-xl rounded-2xl border-2 border-white/30 
+      !bg-white/10 text-white placeholder:text-white/50
+      focus:!bg-white/20 focus:border-white/60 focus:ring-0 
+      transition-all duration-200 outline-none mb-2
     """
 
-    # 3. Submit Button: High contrast (Blue text on White background)
-    set :submit_class, """
-      w-full py-5 mt-4 bg-white text-blue-700 text-2xl font-black 
-      rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 
-      transition-all duration-200 cursor-pointer
+    set :footer_class, """
+      mt-8 flex justify-between gap-4 text-sm font-bold 
+      text-white/90 underline decoration-white/30 hover:text-white
     """
   end
 
-  # 2. Wrap the form in a high-contrast card
-  override AshAuthentication.Phoenix.Components.SignIn do
-    # White background with blur and rounded corners makes the form "pop"
-    # set :root_class,
-    #      "w-full max-w-md bg-white p-8 md:p-10 rounded-3xl shadow-2xl flex flex-col gap-4 bg-gradient-to-br from-blue-600 via-teal-500 to-green-500"
+  override AshAuthentication.Phoenix.Components.Password.SignInForm do
+    set :root_class,
+        "w-full max-w-2xl bg-white/10 backdrop-blur-xl p-8 md:p-10 rounded-3xl border border-white/20 shadow-2xl"
 
-    # "grid h-screen place-items-center bg-gradient-to-br from-blue-600 via-teal-500 to-green-500"
+    set :label_class,
+        "text-white text-2xl font-black tracking-widest mb-3 block drop-shadow-md uppercase"
 
-    # Bigger fonts and better spacing
-    set :label_class, "text-gray-800 font-semibold text-lg mb-2 block"
+    set :input_class, """
+      w-full p-4 text-xl rounded-2xl border-2 border-white/30 
+      !bg-white/10 text-white placeholder:text-white/50
+      focus:!bg-white/20 focus:border-white/60 focus:ring-0 
+      transition-all duration-200 outline-none mb-2
+    """
 
-    set :input_class,
-        "w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+    set :footer_class, """
+      mt-8 flex justify-between gap-4 text-sm font-bold 
+      text-white/90 underline decoration-white/30 hover:text-white
+    """
 
-    # Fix the button
     set :submit_class,
-        "w-full mt-6 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xl rounded-xl transition-all shadow-lg active:scale-95"
+        "w-full py-5 mt-4 bg-white text-black-700 text-2xl font-black rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
+  end
 
-    # Better contrast for footer links
-    set :footer_class,
-        "mt-6 flex justify-between text-sm font-medium text-gray-600 hover:text-blue-700"
+  override AshAuthentication.Phoenix.Components.Password.Input do
+    set :label_class,
+        "text-white text-2l font-black tracking-widest mb-3 block drop-shadow-md uppercase"
+
+    set :input_class, """
+      w-full p-4 text-xl font-bold rounded-2xl border-2 border-white/30 
+      !bg-gray-200/90 text-black placeholder:text-gray-500
+      focus:!bg-gray-100 focus:border-white/80 focus:ring-0 
+      transition-all duration-200 outline-none mb-2
+    """
   end
 end
