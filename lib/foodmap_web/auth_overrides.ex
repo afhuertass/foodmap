@@ -17,6 +17,7 @@ defmodule FoodmapWeb.AuthOverrides do
 
   override AshAuthentication.Phoenix.Components.Banner do
     set :image_url, "/images/foodmap-svg.svg"
+    set :dark_image_url, "/images/foodmap-svg.svg"
 
     set :root_class, "flex flex-col items-center justify-center mb-8 w-full"
     # Hiding the default "Register" text allows your logo to be the hero
@@ -44,7 +45,7 @@ defmodule FoodmapWeb.AuthOverrides do
     # 'p-4' and 'text-xl' make it feel premium and easy to use
     set :input_class, """
       w-full p-4 text-xl rounded-2xl border-2 border-white/30 
-      !bg-white/10 text-white placeholder:text-white/50
+      bg-white/10 text-white placeholder:text-white/50
       focus:!bg-white/20 focus:border-white/60 focus:ring-0 
       transition-all duration-200 outline-none mb-2
     """
@@ -64,7 +65,7 @@ defmodule FoodmapWeb.AuthOverrides do
 
     set :input_class, """
       w-full p-4 text-xl rounded-2xl border-2 border-white/30 
-      !bg-white/10 text-white placeholder:text-white/50
+      bg-white/10 text-white placeholder:text-white/50
       focus:!bg-white/20 focus:border-white/60 focus:ring-0 
       transition-all duration-200 outline-none mb-2
     """
@@ -84,8 +85,8 @@ defmodule FoodmapWeb.AuthOverrides do
 
     set :input_class, """
       w-full p-4 text-xl font-bold rounded-2xl border-2 border-white/30 
-      !bg-gray-200/90 text-black placeholder:text-gray-500
-      focus:!bg-gray-100 focus:border-white/80 focus:ring-0 
+      bg-gray-200/90 text-black placeholder:text-gray-500
+      focus:bg-gray-100 focus:border-white/80 focus:ring-0 
       transition-all duration-200 outline-none mb-2
     """
   end
