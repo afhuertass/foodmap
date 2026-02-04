@@ -54,7 +54,7 @@ config :spark,
 config :foodmap,
   ecto_repos: [Foodmap.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Foodmap.Accounts]
+  ash_domains: [Foodmap.Maps, Foodmap.Accounts]
 
 # Configure the endpoint
 config :foodmap, FoodmapWeb.Endpoint,
