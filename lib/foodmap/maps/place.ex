@@ -4,6 +4,15 @@ defmodule Foodmap.Maps.Place do
   postgres do
     table "places"
     repo Foodmap.Repo
+
+    relationships do
+      has_many :follower_relationships, Foodmap.Maps.PlaceUser
+
+      many_to_many :followers, Foodmap.Accounts.User do
+        join_relationship :follower_relationships
+        destination_attribute_on_join_resource :follower_id
+      end
+    end
   end
 
   actions do

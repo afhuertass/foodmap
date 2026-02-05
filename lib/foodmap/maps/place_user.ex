@@ -1,5 +1,9 @@
 defmodule Foodmap.Maps.PlaceUser do
-  use Ash.Resource, otp_app: :foodmap, domain: Foodmap.Maps, data_layer: AshPostgres.DataLayer
+  use Ash.Resource,
+    otp_app: :foodmap,
+    domain: Foodmap.Maps,
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   # This resource is used to link Places to User via a many to many relationship. One user can many places that it likes and a place can have many users that it is favorite of
   postgres do
@@ -12,8 +16,12 @@ defmodule Foodmap.Maps.PlaceUser do
     end
   end
 
+  actions do
+    defaults [:read]
+  end
+
   relationships do
-    belongs_to :place, Foodmap.Maps.Place do
+    belongs_to :follower, Foodmap.Maps.Place do
       primary_key? true
       allow_nil? false
     end

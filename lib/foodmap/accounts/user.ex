@@ -1,4 +1,5 @@
 defmodule Foodmap.Accounts.User do
+  # 464e8ceb-f5c7-490a-831b-b7d7717f4a5b
   use Ash.Resource,
     otp_app: :foodmap,
     domain: Foodmap.Accounts,
@@ -51,6 +52,17 @@ defmodule Foodmap.Accounts.User do
   postgres do
     table "users"
     repo Foodmap.Repo
+
+    relationships do
+      has_many :follower_relationships, Foodmap.Maps.PlaceUser do
+        destination_attribute :follower_id
+      end
+
+      many_to_many :followed_places, Foodmap.Maps.Place do
+        join_relationship :follower_relationships
+        source_attribute_on_join_resource :follower_id
+      end
+    end
   end
 
   actions do
