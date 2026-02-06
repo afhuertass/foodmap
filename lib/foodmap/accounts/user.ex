@@ -52,17 +52,6 @@ defmodule Foodmap.Accounts.User do
   postgres do
     table "users"
     repo Foodmap.Repo
-
-    relationships do
-      has_many :follower_relationships, Foodmap.Maps.PlaceUser do
-        destination_attribute :follower_id
-      end
-
-      many_to_many :followed_places, Foodmap.Maps.Place do
-        join_relationship :follower_relationships
-        source_attribute_on_join_resource :follower_id
-      end
-    end
   end
 
   actions do
@@ -256,6 +245,17 @@ defmodule Foodmap.Accounts.User do
     end
 
     attribute :confirmed_at, :utc_datetime_usec
+  end
+
+  relationships do
+    has_many :follower_relationships, Foodmap.Maps.PlaceUser do
+      destination_attribute :follower_id
+    end
+
+    many_to_many :followed_places, Foodmap.Maps.Place do
+      join_relationship :follower_relationships
+      source_attribute_on_join_resource :follower_id
+    end
   end
 
   identities do

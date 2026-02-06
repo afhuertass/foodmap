@@ -11,7 +11,7 @@ defmodule Foodmap.Maps.PlaceUser do
     repo Foodmap.Repo
 
     references do
-      reference :user, on_delete: :delete, index?: true
+      reference :follower, on_delete: :delete, index?: true
       reference :place, on_delete: :delete
     end
   end
@@ -21,7 +21,7 @@ defmodule Foodmap.Maps.PlaceUser do
   end
 
   relationships do
-    belongs_to :follower, Foodmap.Maps.Place do
+    belongs_to :place, Foodmap.Maps.Place do
       primary_key? true
       allow_nil? false
     end
