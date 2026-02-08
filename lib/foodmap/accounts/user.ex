@@ -249,12 +249,15 @@ defmodule Foodmap.Accounts.User do
 
   relationships do
     has_many :follower_relationships, Foodmap.Maps.PlaceUser do
-      destination_attribute :follower_id
+      destination_attribute :user_id
     end
 
     many_to_many :followed_places, Foodmap.Maps.Place do
-      join_relationship :follower_relationships
-      source_attribute_on_join_resource :follower_id
+      through Foodmap.Maps.PlaceUser
+      # Points to User
+      source_attribute_on_join_resource :user_id
+      # Points to Place
+      destination_attribute_on_join_resource :place_id
     end
   end
 
