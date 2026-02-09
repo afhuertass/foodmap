@@ -28,9 +28,9 @@ defmodule FoodmapWeb.Router do
       on_mount: {FoodmapWeb.LiveUserAuth, :live_user_required} do
       live "/places", PlaceLive.Index, :index
 
-      # live "/places/new", PlaceLive.Form, :new
-      # live "/places/:id/edit", PlaceLive.Form, :edit
-      # live "/places/:id", PlaceLive.Show, :show
+      live "/places/new", PlaceLive.Form, :new
+      live "/places/:id/edit", PlaceLive.Form, :edit
+      live "/places/:id", PlaceLive.Show, :show
       # live "/places/:id/show/edit", PlaceLive.Show, :edit
     end
 

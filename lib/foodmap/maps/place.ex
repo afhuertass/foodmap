@@ -7,7 +7,11 @@ defmodule Foodmap.Maps.Place do
   end
 
   actions do
-    defaults [:create, :read, :update, :destroy]
+    defaults [:read, :update, :destroy]
+
+    create :create do
+      accept [:name, :lat, :lng, :address]
+    end
   end
 
   attributes do

@@ -16,6 +16,11 @@ defmodule FoodmapWeb.PlaceLive.Form do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:address]} type="text" label="Address" />
+
+        <.input field={@form[:lat]} type="number" label="Latitude" />
+        <.input field={@form[:lon]} type="number" label="Longitude" />
         <.button phx-disable-with="Saving..." variant="primary">Save Place</.button>
         <.button navigate={return_path(@return_to, @place)}>Cancel</.button>
       </.form>
@@ -47,7 +52,8 @@ defmodule FoodmapWeb.PlaceLive.Form do
 
   @impl true
   def handle_event("validate", %{"place" => place_params}, socket) do
-    {:noreply, assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, place_params))}
+    form = AshPhoenix.Form.validate(socket.assigns.form, place_params)
+    {:noreply, assign(socket, form: form)}
   end
 
   def handle_event("save", %{"place" => place_params}, socket) do

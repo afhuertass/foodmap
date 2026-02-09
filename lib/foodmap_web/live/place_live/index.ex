@@ -42,7 +42,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
       <nav class="flex gap-4 items-center">
         <%= if @current_user do %>
           <span>{@current_user.email}</span>
-          <.link href={~p"/sign-out"} method="delete" class="underline">Log out</.link>
+          <.link href={~p"/sign-out"} method="get" class="underline">Log out</.link>
         <% else %>
           <.link href={~p"/sign-in"} class="underline">Log in</.link>
         <% end %>
