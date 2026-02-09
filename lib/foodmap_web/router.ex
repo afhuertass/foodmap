@@ -24,8 +24,25 @@ defmodule FoodmapWeb.Router do
   scope "/", FoodmapWeb do
     pipe_through :browser
 
+    ash_authentication_live_session :authentication_required,
+      on_mount: {FoodmapWeb.LiveUserAuth, :live_user_required} do
+      live "/places", PlaceLive.Index, :index
+
+      # live "/places/new", PlaceLive.Form, :new
+      # live "/places/:id/edit", PlaceLive.Form, :edit
+      # live "/places/:id", PlaceLive.Show, :show
+      # live "/places/:id/show/edit", PlaceLive.Show, :edit
+    end
+
     ash_authentication_live_session :authenticated_routes do
       # in each liveview, add one of the following at the top of the module:
+
+      # live "/places", PlaceLive.Index, :index
+      # live "/places/new", PlaceLive.Form, :new
+      # live "/places/:id/edit", PlaceLive.Form, :edit
+      #
+      # live "/places/:id", PlaceLive.Show, :show
+      # live "/places/:id/show/edit", PlaceLive.Show, :edit
       #
       # If an authenticated user must be present:
       # on_mount {FoodmapWeb.LiveUserAuth, :live_user_required}
