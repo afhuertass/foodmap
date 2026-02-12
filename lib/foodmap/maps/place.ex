@@ -11,6 +11,11 @@ defmodule Foodmap.Maps.Place do
 
     create :create do
       accept [:name, :lat, :lng, :address]
+
+      argument :user_id, :uuid, allow_nil?: false
+
+      # 2. Tell Ash to use that ID to create a record in the join table
+      change manage_relationship(:user_id, :followers, type: :create)
     end
   end
 

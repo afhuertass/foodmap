@@ -53,6 +53,7 @@ defmodule FoodmapWeb.PlaceLive.Form do
   @impl true
   def handle_event("validate", %{"place" => place_params}, socket) do
     form = AshPhoenix.Form.validate(socket.assigns.form, place_params)
+    IO.inspect(AshPhoenix.Form.params(form), label: "Form Params after Ash processing")
     {:noreply, assign(socket, form: form)}
   end
 
@@ -85,7 +86,8 @@ defmodule FoodmapWeb.PlaceLive.Form do
       else
         AshPhoenix.Form.for_create(Foodmap.Maps.Place, :create,
           as: "place",
-          actor: socket.assigns.current_user
+          actor: socket.assigns.current_user,
+          params: %{"user_id" => socket.assigns.current_user.id}
         )
       end
 

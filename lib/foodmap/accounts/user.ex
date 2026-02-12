@@ -248,10 +248,6 @@ defmodule Foodmap.Accounts.User do
   end
 
   relationships do
-    has_many :follower_relationships, Foodmap.Maps.PlaceUser do
-      destination_attribute :user_id
-    end
-
     many_to_many :followed_places, Foodmap.Maps.Place do
       through Foodmap.Maps.PlaceUser
       # Points to User

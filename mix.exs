@@ -42,6 +42,7 @@ defmodule Foodmap.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.0"},
+      {:maplibre, "~> 0.1.9"},
       {:picosat_elixir, "~> 0.2"},
       {:sourceror, "~> 1.8", only: [:dev, :test]},
       {:live_debugger, "~> 0.5", only: [:dev]},

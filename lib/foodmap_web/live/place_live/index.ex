@@ -15,6 +15,13 @@ defmodule FoodmapWeb.PlaceLive.Index do
         </:actions>
       </.header>
 
+      <div
+        id="map-container"
+        phx-hook="MapHook"
+        phx-update="ignore"
+        class="w-full h-[500px]"
+      >
+      </div>
       <.table
         id="places"
         rows={@streams.places}

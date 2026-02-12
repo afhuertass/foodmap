@@ -104,3 +104,11 @@
 [data-phx-session], [data-phx-teleported-src] { display: contents }
 
 /* This file is for your main application CSS */
+
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+/* Ensure the map container has a height */
+#map {
+  width: 100%;
+  height: 500px;
+}
