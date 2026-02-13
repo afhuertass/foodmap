@@ -11,13 +11,18 @@ defmodule Foodmap.Maps.PlaceUser do
     repo Foodmap.Repo
 
     references do
-      reference :follower, on_delete: :delete, index?: true
+      reference :user, on_delete: :delete, index?: true
       reference :place, on_delete: :delete
     end
   end
 
   actions do
     defaults [:read]
+
+    create :create do
+      primary? true
+      accept [:user_id, :place_id]
+    end
   end
 
   relationships do

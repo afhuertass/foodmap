@@ -20,7 +20,7 @@ defmodule FoodmapWeb.PlaceLive.Form do
         <.input field={@form[:address]} type="text" label="Address" />
 
         <.input field={@form[:lat]} type="number" label="Latitude" />
-        <.input field={@form[:lon]} type="number" label="Longitude" />
+        <.input field={@form[:lng]} type="number" label="Longitude" />
         <.button phx-disable-with="Saving..." variant="primary">Save Place</.button>
         <.button navigate={return_path(@return_to, @place)}>Cancel</.button>
       </.form>
