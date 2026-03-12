@@ -21,7 +21,7 @@ defmodule Foodmap.Repo.Migrations.Neeee do
              )
     end
 
-    create index(:place_users, [:user_id])
+    create_if_not_exists index(:place_users, [:user_id])
   end
 
   def down do

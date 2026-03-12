@@ -25,6 +25,12 @@ defmodule Foodmap.Maps.PlaceUser do
     end
   end
 
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
+    end
+  end
+
   relationships do
     belongs_to :place, Foodmap.Maps.Place do
       primary_key? true
