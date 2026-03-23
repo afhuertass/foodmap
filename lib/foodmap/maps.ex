@@ -8,11 +8,11 @@ defmodule Foodmap.Maps do
     resource Foodmap.Maps.PlaceUser do
       define :follow_map do
         action :create
-        args [:user]
+        args [:place]
 
-        custom_input :user, :struct do
-          constraints instance_of: Foodmap.Accounts.User
-          transform to: :user_id, using: & &1.id
+        custom_input :place, :struct do
+          constraints instance_of: Foodmap.Maps.Place
+          transform to: :place_id, using: & &1.id
         end
       end
     end

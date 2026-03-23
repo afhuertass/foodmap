@@ -69,7 +69,14 @@ defmodule FoodmapWeb.PlaceLive.Form do
       {:ok, place} ->
         notify_parent({:saved, place})
 
-        # Foodmap.Maps.follow_map(socket.assigns.current_user)
+        %{id: id} = place
+
+        IO.inspect(place)
+
+        created =
+          Foodmap.Maps.follow_map(place, actor: socket.assigns.current_user)
+
+        IO.inspect(created)
 
         socket =
           socket

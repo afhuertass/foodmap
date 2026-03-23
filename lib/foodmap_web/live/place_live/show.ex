@@ -30,6 +30,10 @@ defmodule FoodmapWeb.PlaceLive.Show do
 
   @impl true
   def mount(%{"id" => id}, _session, socket) do
+    place = Ash.get!(Foodmap.Maps.Place, id, actor: socket.assigns.current_user)
+    aaa = Ash.load(place, :follower_relationships, actor: socket.assigns.current_user)
+    IO.inspect(aaa)
+
     {:ok,
      socket
      |> assign(:page_title, "Show Place")

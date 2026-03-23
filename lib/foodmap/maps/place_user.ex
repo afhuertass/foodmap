@@ -21,7 +21,7 @@ defmodule Foodmap.Maps.PlaceUser do
 
     create :create do
       primary? true
-      accept [:user_id]
+      accept [:place_id]
 
       change relate_actor(:user, allow_nil?: false)
     end
@@ -30,6 +30,10 @@ defmodule Foodmap.Maps.PlaceUser do
   policies do
     policy action_type(:read) do
       authorize_if always()
+    end
+
+    policy action_type(:create) do
+      authorize_if actor_present()
     end
   end
 

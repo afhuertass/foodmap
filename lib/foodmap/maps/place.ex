@@ -1,5 +1,9 @@
 defmodule Foodmap.Maps.Place do
-  use Ash.Resource, otp_app: :foodmap, domain: Foodmap.Maps, data_layer: AshPostgres.DataLayer
+  use Ash.Resource,
+    otp_app: :foodmap,
+    domain: Foodmap.Maps,
+    data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer]
 
   postgres do
     table "places"
@@ -17,6 +21,12 @@ defmodule Foodmap.Maps.Place do
 
       # 2. Tell Ash to use that ID to create a record in the join table
       # change manage_relationship(actor(:id), :followers, type: :create)
+    end
+  end
+
+  policies do
+    policy action_type(:read) do
+      authorize_if always()
     end
   end
 
@@ -38,6 +48,14 @@ defmodule Foodmap.Maps.Place do
       through Foodmap.Maps.PlaceUser
       source_attribute_on_join_resource :place_id
       destination_attribute_on_join_resource :user_id
+    end
+  end
+
+  calculations do
+    calculate :followed_by_me,
+              :boolean,
+              expr(exists(follower_relationships, user_id == ^actor(:id))) do
+      public? true
     end
   end
 end
