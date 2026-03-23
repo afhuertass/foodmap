@@ -23,8 +23,6 @@ defmodule FoodmapWeb.PlaceLive.Show do
         <:item title="Id">{@place.id}</:item>
 
         <:item title="Name">{@place.name}</:item>
-
-        <:item title="Name">{@place.address}</:item>
       </.list>
     </Layouts.app>
     """

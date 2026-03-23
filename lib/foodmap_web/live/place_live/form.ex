@@ -24,7 +24,6 @@ defmodule FoodmapWeb.PlaceLive.Form do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:address]} type="text" label="Address" />
 
         <.input field={@form[:lat]} type="text" label="Latitude" />
         <.input field={@form[:lng]} type="text" label="Longitude" />
@@ -69,6 +68,8 @@ defmodule FoodmapWeb.PlaceLive.Form do
     case AshPhoenix.Form.submit(socket.assigns.form, params: place_params) do
       {:ok, place} ->
         notify_parent({:saved, place})
+
+        # Foodmap.Maps.follow_map(socket.assigns.current_user)
 
         socket =
           socket

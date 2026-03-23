@@ -27,7 +27,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
         rows={@streams.places}
         row_click={fn {_id, place} -> JS.navigate(~p"/places/#{place}") end}
       >
-        <:col :let={{_id, place}} label="Id">{place.id}</:col>
+        <:col :let={{_id, place}} label="Name">{place.name}</:col>
 
         <:action :let={{_id, place}}>
           <div class="sr-only">
@@ -60,11 +60,14 @@ defmodule FoodmapWeb.PlaceLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    places = Ash.read!(Foodmap.Maps.Place, actor: socket.assigns[:current_user])
+
     {:ok,
      socket
      |> assign(:page_title, "Listing Places")
      |> assign_new(:current_user, fn -> nil end)
-     |> stream(:places, Ash.read!(Foodmap.Maps.Place, actor: socket.assigns[:current_user]))}
+     |> push_event("init_markers", %{places: serialize_places(places)})
+     |> stream(:places, places)}
   end
 
   @impl true
@@ -72,6 +75,13 @@ defmodule FoodmapWeb.PlaceLive.Index do
     place = Ash.get!(Foodmap.Maps.Place, id, actor: socket.assigns.current_user)
     Ash.destroy!(place, actor: socket.assigns.current_user)
 
-    {:noreply, stream_delete(socket, :places, place)}
+    {:noreply,
+     stream_delete(socket, :places, place) |> push_event("remove_marker", %{id: place.id})}
+  end
+
+  def serialize_places(places) do
+    Enum.map(places, fn place ->
+      %{id: place.id, name: place.name, lat: place.lat, lng: place.lng}
+    end)
   end
 end

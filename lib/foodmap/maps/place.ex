@@ -11,7 +11,7 @@ defmodule Foodmap.Maps.Place do
 
     create :create do
       primary? true
-      accept [:name, :lat, :lng, :address]
+      accept [:name, :lat, :lng]
 
       # argument :user_id, :uuid, allow_nil?: false
 
@@ -27,7 +27,6 @@ defmodule Foodmap.Maps.Place do
       allow_nil? false
     end
 
-    attribute :address, :string
     attribute :lat, :float
     attribute :lng, :float
   end

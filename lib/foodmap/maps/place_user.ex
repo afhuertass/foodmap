@@ -21,7 +21,9 @@ defmodule Foodmap.Maps.PlaceUser do
 
     create :create do
       primary? true
-      accept [:user_id, :place_id]
+      accept [:user_id]
+
+      change relate_actor(:user, allow_nil?: false)
     end
   end
 
