@@ -10,6 +10,13 @@ defmodule FoodmapWeb.PlaceLive.Form do
         <:subtitle>Use this form to manage place records in your database.</:subtitle>
       </.header>
 
+      <div
+        id="map-container"
+        phx-hook="MapHook"
+        phx-update="ignore"
+        class="w-full h-[500px]"
+      >
+      </div>
       <.form
         for={@form}
         id="place-form"
@@ -19,8 +26,9 @@ defmodule FoodmapWeb.PlaceLive.Form do
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:address]} type="text" label="Address" />
 
-        <.input field={@form[:lat]} type="number" label="Latitude" />
-        <.input field={@form[:lng]} type="number" label="Longitude" />
+        <.input field={@form[:lat]} type="text" label="Latitude" />
+        <.input field={@form[:lng]} type="text" label="Longitude" />
+
         <.button phx-disable-with="Saving..." variant="primary">Save Place</.button>
         <.button navigate={return_path(@return_to, @place)}>Cancel</.button>
       </.form>
@@ -96,4 +104,22 @@ defmodule FoodmapWeb.PlaceLive.Form do
 
   defp return_path("index", _place), do: ~p"/places"
   defp return_path("show", place), do: ~p"/places/#{place.id}"
+
+  @impl true
+  def handle_event("map_clicked", %{"lat" => lat, "lng" => lng}, socket) do
+    # We take the current form and merge the new coordinates into its params
+    IO.inspect("fuuu")
+
+    form =
+      socket.assigns.form
+      |> AshPhoenix.Form.validate(%{"lat" => lat, "lng" => lng})
+
+    socket =
+      socket
+      |> assign(form: form)
+      # <--- Check this line!
+      |> push_event("set_marker", %{lat: lat, lng: lng})
+
+    {:noreply, socket}
+  end
 end
