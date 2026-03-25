@@ -57,6 +57,19 @@ defmodule Foodmap.Accounts.User do
   actions do
     defaults [:read]
 
+    read :list_users do
+      # You can add pagination or default sorting here
+
+      pagination do
+        required? false
+        offset? true
+        keyset? true
+        countable true
+      end
+
+      prepare build(sort: [email: :asc])
+    end
+
     read :get_by_subject do
       description "Get a user by the subject claim in a JWT"
       argument :subject, :string, allow_nil?: false
@@ -227,6 +240,10 @@ defmodule Foodmap.Accounts.User do
 
   policies do
     bypass AshAuthentication.Checks.AshAuthenticationInteraction do
+      authorize_if always()
+    end
+
+    policy action(:list_users) do
       authorize_if always()
     end
   end

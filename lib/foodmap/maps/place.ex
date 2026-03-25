@@ -28,6 +28,10 @@ defmodule Foodmap.Maps.Place do
     policy action_type(:read) do
       authorize_if always()
     end
+
+    policy action_type(:create) do
+      authorize_if always()
+    end
   end
 
   attributes do

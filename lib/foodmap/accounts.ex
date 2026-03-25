@@ -8,5 +8,6 @@ defmodule Foodmap.Accounts do
   resources do
     resource Foodmap.Accounts.Token
     resource Foodmap.Accounts.User
+    resource Foodmap.Accounts.Friendship
   end
 end
