@@ -57,28 +57,32 @@ export const MapHook = {
       console.log("Initializing markers:", places);
       places.forEach(place => this.addPlaceMarker(place));
     });
-
+	// Friend markers
+    this.handleEvent("friend_markers", ({ places }) => {
+      console.log("Initializing markers:", places);
+      places.forEach(place => this.addPlaceMarker(place, "#71f58a"));
+    });
     // NEW: Add a single marker (called after a successful save)
     this.handleEvent("add_marker", (place) => {
       console.log("Adding new marker:", place);
       this.addPlaceMarker(place);
     });
   },
+addPlaceMarker(place, color = "#3b82f6") {
+  if (!place.lat || !place.lng) return;
 
-  // Helper function to keep things DRY
-  addPlaceMarker(place) {
-    if (!place.lat || !place.lng) return;
-
-    // Check if marker already exists to avoid duplicates
-    if (this.markers[place.id]) {
-        this.markers[place.id].remove();
-    }
-
-    const marker = new mlgl.Marker({ color: "#3b82f6" }) // Blue for saved places
-      .setLngLat([place.lng, place.lat])
-      .setPopup(new mlgl.Popup().setHTML(`<b>${place.name}</b>`))
-      .addTo(this.map);
-
-    this.markers[place.id] = marker;
+  // Check if marker already exists to avoid duplicates
+  if (this.markers[place.id]) {
+      this.markers[place.id].remove();
   }
+
+  // Use the color variable passed into the function
+  const marker = new mlgl.Marker({ color: color }) 
+    .setLngLat([place.lng, place.lat])
+    .setPopup(new mlgl.Popup().setHTML(`<b>${place.name}</b>`))
+    .addTo(this.map);
+
+  this.markers[place.id] = marker;
+}
+  // Helper function to keep things DRY
 };

@@ -112,3 +112,27 @@
   width: 100%;
   height: 500px;
 }
+
+
+/* Change the popup background and text color */
+.maplibregl-popup-content {
+  background-color: #18181b; /* zinc-900 / black */
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Change the little "tip/arrow" at the bottom of the popup */
+.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: #18181b;
+}
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: #18181b;
+}
+.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: #18181b;
+}
+.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: #18181b;
+}

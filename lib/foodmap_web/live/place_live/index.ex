@@ -126,7 +126,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
     # lets load friends
     actor = socket.assigns.current_user
 
-    get_friends_places_user(user, actor)
+    friends_followed_places = get_friends_places_user(user, actor)
     # IO.inspect(user)
 
     {:ok,
@@ -136,6 +136,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
      # the user with the loaded relationships
      |> assign(:current_user, user)
      |> push_event("init_markers", %{places: serialize_places(user.followed_places)})
+     |> push_event("friend_markers", %{places: serialize_places(friends_followed_places)})
      |> stream(:places_followed, user.followed_places)}
   end
 
