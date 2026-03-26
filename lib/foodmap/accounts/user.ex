@@ -246,6 +246,10 @@ defmodule Foodmap.Accounts.User do
     policy action(:list_users) do
       authorize_if always()
     end
+
+    policy action(:read) do
+      authorize_if always()
+    end
   end
 
   attributes do
@@ -271,6 +275,15 @@ defmodule Foodmap.Accounts.User do
       source_attribute_on_join_resource :user_id
       # Points to Place
       destination_attribute_on_join_resource :place_id
+    end
+
+    has_many :outbound_friendships, Foodmap.Accounts.Friendship do
+      destination_attribute :user_id
+    end
+
+    # All friendships where this user is the recipient
+    has_many :inbound_friendships, Foodmap.Accounts.Friendship do
+      destination_attribute :friend_id
     end
   end
 

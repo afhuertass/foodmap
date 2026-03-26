@@ -5,7 +5,7 @@ defmodule Foodmap.Accounts.Friendship do
 
   postgres do
     table "friendships"
-    repo MyApp.Repo
+    repo Foodmap.Repo
   end
 
   actions do
@@ -16,14 +16,15 @@ defmodule Foodmap.Accounts.Friendship do
       accept [:friend_id]
       # Set the current user as the initiator automatically in the UI/Action
       change set_attribute(:status, :pending)
-
+      change relate_actor(:user)
       # Prevent friending yourself
-      validate compare(:user_id, not_equal_to: arg(:friend_id))
+      validate compare(:user_id, is_not_equal: arg(:friend_id))
     end
 
     # 2. Accept Friendship
     update :accept do
       # Only allow transitioning from pending
+      primary? true
       validate attribute_equals(:status, :pending)
       change set_attribute(:status, :accepted)
     end

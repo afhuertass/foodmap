@@ -1,5 +1,6 @@
 defmodule FoodmapWeb.PlaceLive.Index do
   use FoodmapWeb, :live_view
+  import Ash.Query
 
   on_mount {FoodmapWeb.LiveUserAuth, :live_user_required}
   @impl true
@@ -22,7 +23,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
 
           <.table
             id="places"
-            rows={@streams.places}
+            rows={@streams.places_followed}
             row_click={fn {_id, place} -> JS.navigate(~p"/places/#{place}") end}
           >
             <:col :let={{_id, place}} label="Name">{place.name}</:col>
@@ -32,26 +33,58 @@ defmodule FoodmapWeb.PlaceLive.Index do
           </.table>
         </div>
 
-        <div class="w-full lg:w-80 border-l pl-8">
-          <h2 class="text-xl font-semibold mb-4 text-zinc-800">Community</h2>
-          <div id="users-list" phx-update="stream" class="space-y-4 text-white">
+        <div class="w-full lg:w-80 border-l pl-8 bg-zinc-900 rounded-xl p-4">
+          <h2 class="text-xl font-semibold mb-4 text-white">Community</h2>
+          <div id="users-list" class="space-y-4">
             <div
-              :for={{id, user} <- @users}
-              id={id}
-              class="flex items-center justify-between p-2 hover:bg-zinc-50 rounded-lg white-text"
+              :for={user <- @users}
+              id={user.id}
+              class="flex items-center justify-between p-2 hover:bg-zinc-800 rounded-lg transition-colors"
             >
-              <div class="flex flex-col text-white">
-                <span class="font-medium text-white">{user}</span>
-                <span class="text-xs text-zinc-500">Member</span>
+              <div class="flex flex-col">
+                <span class="font-medium text-white text-sm">{to_string(user.email)}</span>
+                <span class="text-xs text-zinc-400">
+                  <%!-- Logic to determine label --%>
+                  <%= cond do %>
+                    <% Enum.any?(@current_user.outbound_friendships, &(&1.friend_id == user.id && &1.status == :accepted)) -> %>
+                      <span class="text-green-400">Friend</span>
+                    <% Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id && &1.status == :accepted)) -> %>
+                      <span class="text-green-400">Friend</span>
+                    <% Enum.any?(@current_user.outbound_friendships, &(&1.friend_id == user.id && &1.status == :pending)) -> %>
+                      Waiting for response
+                    <% Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id && &1.status == :pending)) -> %>
+                      Sent you a request
+                    <% true -> %>
+                      Member
+                  <% end %>
+                </span>
               </div>
 
-              <.button
-                phx-click="send_friend_request"
-                phx-value-id={id}
-                variant="primary"
-              >
-                Add
-              </.button>
+              <%!-- Logic to determine button --%>
+              <div>
+                <%= cond do %>
+                  <% Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id && &1.status == :pending)) -> %>
+                    <.button
+                      phx-click="accept_friendship"
+                      phx-value-id={user.id}
+                      class="!bg-white !text-black"
+                    >
+                      Accept
+                    </.button>
+                  <% Enum.any?(@current_user.outbound_friendships, &(&1.friend_id == user.id)) or 
+             Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id)) -> %>
+                    <%!-- Show nothing or a 'Friends' icon if relationship exists --%>
+                    <.icon name="hero-check-circle" class="w-5 h-5 text-zinc-500" />
+                  <% true -> %>
+                    <.button
+                      phx-click="send_friend_request"
+                      phx-value-id={user.id}
+                      variant="primary"
+                    >
+                      Add
+                    </.button>
+                <% end %>
+              </div>
             </div>
           </div>
         </div>
@@ -71,26 +104,39 @@ defmodule FoodmapWeb.PlaceLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    places = Ash.read!(Foodmap.Maps.Place, actor: socket.assigns[:current_user])
+    # places = Ash.read!(Foodmap.Maps.Place, actor: socket.assigns[:current_user])
 
     users =
       Foodmap.Accounts.User
       |> Ash.Query.for_read(:list_users)
       |> Ash.read!()
-      |> Enum.map(fn %{id: id, email: email} -> {id, email.string} end)
-      |> Enum.filter(fn {id, _} -> id != socket.assigns.current_user.id end)
+      # |> Enum.map(fn %{id: id, email: email} -> {id, email.string} end)
+      |> Enum.filter(fn %{id: id} -> id != socket.assigns.current_user.id end)
 
-    current_user = Ash.load(socket.assigns.current_user, :followed_places)
+    # load the user with the followed places
+    {_, user} =
+      Ash.load(socket.assigns.current_user, [
+        :followed_places,
+        :inbound_friendships,
+        :outbound_friendships
+      ])
 
-    IO.inspect(current_user)
+    # I want a list of the folloed places to assing to the socket
+    # IO.inspect(user.followed_places)
+    # lets load friends
+    actor = socket.assigns.current_user
+
+    get_friends_places_user(user, actor)
+    # IO.inspect(user)
 
     {:ok,
      socket
      |> assign(:page_title, "Listing Places")
      |> assign(:users, users)
-     |> assign_new(:current_user, fn -> nil end)
-     |> push_event("init_markers", %{places: serialize_places(places)})
-     |> stream(:places, places)}
+     # the user with the loaded relationships
+     |> assign(:current_user, user)
+     |> push_event("init_markers", %{places: serialize_places(user.followed_places)})
+     |> stream(:places_followed, user.followed_places)}
   end
 
   @impl true
@@ -102,9 +148,89 @@ defmodule FoodmapWeb.PlaceLive.Index do
      stream_delete(socket, :places, place) |> push_event("remove_marker", %{id: place.id})}
   end
 
+  @impl true
+  def handle_event("send_friend_request", %{"id" => friend_id}, socket) do
+    actor = socket.assigns.current_user
+
+    # 1. Execute the Ash action
+    # We use the :request action defined in your Friendship resource
+    result =
+      Foodmap.Accounts.Friendship
+      |> Ash.Changeset.for_create(:request, %{friend_id: friend_id}, actor: actor)
+      |> Ash.create(actor: actor)
+
+    case result do
+      {:ok, _friendship} ->
+        # 2. Re-load the current user's relationships
+        # This ensures the Enum.any? checks in your template find the new record
+        user = Ash.load!(actor, [:outbound_friendships, :inbound_friendships], actor: actor)
+
+        {:noreply,
+         socket
+         |> assign(:current_user, user)
+         |> put_flash(:info, "Friend request sent!")}
+
+      {:error, error} ->
+        IO.inspect(error)
+        {:noreply, put_flash(socket, :error, "Could not send friend request.")}
+    end
+  end
+
+  @impl true
+  def handle_event("accept_friendship", %{"id" => sender_id}, socket) do
+    actor = socket.assigns.current_user
+
+    {:ok, friendship} =
+      Foodmap.Accounts.Friendship
+      |> Ash.Query.for_read(:read, %{}, actor: actor)
+      |> Ash.Query.filter(user_id: sender_id)
+      |> Ash.read_one()
+
+    IO.inspect(friendship)
+
+    # |> Ash.update()
+    update = friendship |> Ash.Changeset.for_update(:accept, %{}) |> Ash.update()
+
+    IO.inspect(update)
+
+    case update do
+      {:ok, _} ->
+        user = Ash.load!(actor, [:outbound_friendships, :inbound_friendships], actor: actor)
+        {:noreply, assign(socket, :current_user, user) |> put_flash(:info, "Accepted!")}
+
+      {:error, _} ->
+        {:noreply, put_flash(socket, :error, "Failed to accept.")}
+    end
+  end
+
   def serialize_places(places) do
     Enum.map(places, fn place ->
       %{id: place.id, name: place.name, lat: place.lat, lng: place.lng}
     end)
+  end
+
+  def get_friends_places_user(
+        %{
+          inbound_friendships: in_friends,
+          outbound_friendships: out_friends
+        },
+        actor
+      ) do
+    out_loaded_places = Ash.load!(out_friends, [friend: [:followed_places]], actor: actor)
+
+    in_loaded_places = Ash.load!(in_friends, [friend: [:followed_places]], actor: actor)
+
+    out_places =
+      out_loaded_places
+      |> Enum.map(fn %{friend: %{followed_places: followed_places}} -> followed_places end)
+      |> List.flatten()
+
+    in_places =
+      in_loaded_places
+      |> Enum.map(fn %{friend: %{followed_places: followed_places}} -> followed_places end)
+      |> List.flatten()
+
+    IO.inspect(out_places ++ in_places)
+    out_places ++ in_places
   end
 end

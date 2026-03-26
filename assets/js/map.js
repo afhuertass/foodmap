@@ -22,13 +22,15 @@ export const MapHook = {
       .setLngLat([24.941, 60.170])
       .addTo(this.map);
 
-    // --- EVENTS ---
-
-    // Listen for clicking the map to update the FORM
+	// click event
     this.map.on('click', (e) => {
       const { lng, lat } = e.lngLat;
-      console.log("Map clicked at:", lat, lng);
-      this.pushEvent("map_clicked", { lat: lat, lng: lng });
+	if (window.location.pathname === "/places/new") {
+	    console.log("Map clicked on /places/new at:", lat, lng);
+	    this.pushEvent("map_clicked", { lat: lat, lng: lng });
+	  } else {
+	    console.log("Map clicked, but ignored (not on /places/new)");
+	  }
     });
 
 /// event handlers
