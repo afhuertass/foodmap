@@ -28,7 +28,7 @@ defmodule FoodmapWeb.PlaceLive.Form do
         <.input field={@form[:lat]} type="text" label="Latitude" />
         <.input field={@form[:lng]} type="text" label="Longitude" />
 
-        <.button phx-disable-with="Processing...">
+        <.button phx-disable-with="Processing..." variant="primary">
           {if @action == :update, do: "Update Place", else: "Save Place"}
         </.button>
         <.button navigate={return_path(@return_to, @place)}>Cancel</.button>
@@ -62,7 +62,7 @@ defmodule FoodmapWeb.PlaceLive.Form do
 
   def mount_market_position(action, place) do
     if action == :save do
-      {24.941, 60.170}
+      {60.170, 24.941}
     else
       {place.lat, place.lng}
     end

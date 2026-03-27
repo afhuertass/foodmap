@@ -11,11 +11,6 @@ defmodule FoodmapWeb.PlaceLive.Index do
         <div class="flex-1">
           <.header>
             Listing Places
-            <:actions>
-              <.button variant="primary" navigate={~p"/places/new"}>
-                <.icon name="hero-plus" /> New Place
-              </.button>
-            </:actions>
           </.header>
 
           <div
@@ -25,7 +20,17 @@ defmodule FoodmapWeb.PlaceLive.Index do
             class="w-full h-[400px] mb-6 border rounded-xl overflow-hidden shadow-sm"
           >
           </div>
-
+          <.header>
+            Followed Places
+            <:subtitle>
+              Your Favorite places
+            </:subtitle>
+            <:actions>
+              <.button variant="primary" navigate={~p"/places/new"}>
+                <.icon name="hero-plus" class="mr-2 h-4 w-4" /> New Place
+              </.button>
+            </:actions>
+          </.header>
           <.table
             id="places"
             rows={@streams.places_followed}
@@ -35,6 +40,21 @@ defmodule FoodmapWeb.PlaceLive.Index do
             <:action :let={{_id, place}}>
               <.link navigate={~p"/places/#{place}/edit"}>Edit</.link>
             </:action>
+          </.table>
+
+          <.header>
+            Your Friends Followed Places
+            <:subtitle>
+              Your friends favorite places
+            </:subtitle>
+          </.header>
+
+          <.table
+            id="places"
+            rows={@streams.friends_places}
+            row_click={fn {_id, place} -> JS.navigate(~p"/places/#{place}") end}
+          >
+            <:col :let={{_id, place}} label="Name">{place.name}</:col>
           </.table>
         </div>
 
@@ -153,6 +173,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
      |> assign(:users, users)
      # the user with the loaded relationships
      |> assign(:current_user, user)
+     |> stream(:friends_places, friends_followed_places)
      |> push_event("init_markers", %{places: serialize_places(user.followed_places)})
      |> push_event("friend_markers", %{places: serialize_places(friends_followed_places)})
      |> stream(:places_followed, user.followed_places)}
