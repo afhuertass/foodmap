@@ -11,7 +11,7 @@ defmodule Foodmap.Maps.Place do
   end
 
   actions do
-    defaults [:read, :update, :destroy]
+    defaults [:read, :destroy]
 
     create :create do
       primary? true
@@ -21,6 +21,10 @@ defmodule Foodmap.Maps.Place do
 
       # 2. Tell Ash to use that ID to create a record in the join table
       # change manage_relationship(actor(:id), :followers, type: :create)
+    end
+
+    update :update do
+      accept [:name, :lat, :lng]
     end
   end
 
@@ -32,6 +36,10 @@ defmodule Foodmap.Maps.Place do
     policy action_type(:create) do
       authorize_if always()
     end
+
+    policy action_type(:update) do
+      authorize_if always()
+    end
   end
 
   attributes do
@@ -41,8 +49,13 @@ defmodule Foodmap.Maps.Place do
       allow_nil? false
     end
 
-    attribute :lat, :float
-    attribute :lng, :float
+    attribute :lat, :float do
+      allow_nil? false
+    end
+
+    attribute :lng, :float do
+      allow_nil? false
+    end
   end
 
   relationships do

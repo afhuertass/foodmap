@@ -10,7 +10,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
       <div class="flex flex-col lg:flex-row gap-8">
         <div class="flex-1">
           <.header>
-            Listing Places
+            Places
             <:actions>
               <.button variant="primary" navigate={~p"/places/new"}>
                 <.icon name="hero-plus" /> New Place
@@ -18,12 +18,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
             </:actions>
           </.header>
 
-          <div
-            id="map-container"
-            phx-hook="MapHook"
-            phx-update="ignore"
-            class="w-full h-[400px] mb-6 border rounded-xl overflow-hidden shadow-sm"
-          >
+          <div id="map-container" phx-hook="MapHook" phx-update="ignore" class="w-full h-[400px] mb-6">
           </div>
 
           <.table
@@ -37,82 +32,60 @@ defmodule FoodmapWeb.PlaceLive.Index do
             </:action>
           </.table>
         </div>
-
-        <div class="w-full lg:w-80 border-l border-zinc-200 dark:border-zinc-800 pl-8 bg-zinc-50 dark:bg-zinc-900 rounded-xl p-4 transition-colors">
-          <h2 class="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Community</h2>
-          <div id="users-list" class="space-y-4">
-            <div
-              :for={user <- @users}
-              id={user.id}
-              class="flex items-center justify-between p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-            >
-              <div class="flex flex-col">
-                <span class="font-medium text-zinc-900 dark:text-white text-sm">
-                  {to_string(user.email)}
-                </span>
-                <span class="text-xs text-zinc-500 dark:text-zinc-400">
-                  <%= cond do %>
-                    <% Enum.any?(@current_user.outbound_friendships, &(&1.friend_id == user.id && &1.status == :accepted)) -> %>
-                      <span class="text-green-600 dark:text-green-400">Friend</span>
-                    <% Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id && &1.status == :accepted)) -> %>
-                      <span class="text-green-600 dark:text-green-400">Friend</span>
-                    <% Enum.any?(@current_user.outbound_friendships, &(&1.friend_id == user.id && &1.status == :pending)) -> %>
-                      Waiting for response
-                    <% Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id && &1.status == :pending)) -> %>
-                      Sent you a request
-                    <% true -> %>
-                      Member
-                  <% end %>
-                </span>
-              </div>
-
-              <div>
-                <%= cond do %>
-                  <% Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id && &1.status == :pending)) -> %>
-                    <.button
-                      phx-click="accept_friendship"
-                      phx-value-id={user.id}
-                      variant="primary"
-                      class="text-xs py-1 px-2"
-                    >
-                      Accept
-                    </.button>
-                  <% Enum.any?(@current_user.outbound_friendships, &(&1.friend_id == user.id)) or 
-                 Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id)) -> %>
-                    <.icon name="hero-check-circle" class="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
-                  <% true -> %>
-                    <.button
-                      phx-click="send_friend_request"
-                      phx-value-id={user.id}
-                      variant="primary"
-                      class="text-xs py-1 px-2"
-                    >
-                      Add
-                    </.button>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
+<%!-- 1. Changed bg-zinc-900 to bg-zinc-50 (light) and dark:bg-zinc-900 (dark) --%>
+<div class="w-full lg:w-80 border-l border-zinc-200 dark:border-zinc-800 pl-8 bg-zinc-50 dark:bg-zinc-900 rounded-xl p-4 transition-colors">
+  
+  <%!-- 2. Changed text-white to text-zinc-900 (light) and dark:text-white (dark) --%>
+  <h2 class="text-xl font-semibold mb-4 text-zinc-900 dark:text-white">Community</h2>
+  
+  <div id="users-list" class="space-y-4">
+    <div
+      :for={user <- @users}
+      id={user.id}
+      class="flex items-center justify-between p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+    >
+      <div class="flex flex-col">
+        <%!-- 4. Dynamic text color for the email --%>
+        <span class="font-medium text-zinc-900 dark:text-white text-sm">{to_string(user.email)}</span>
+        
+        <span class="text-xs text-zinc-500 dark:text-zinc-400">
+          <%= cond do %>
+            <% Enum.any?(@current_user.outbound_friendships, &(&1.friend_id == user.id && &1.status == :accepted)) -> %>
+              <span class="text-green-600 dark:text-green-400">Friend</span>
+            <% Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id && &1.status == :accepted)) -> %>
+              <span class="text-green-600 dark:text-green-400">Friend</span>
+            <%!-- ... rest of your cond logic ... --%>
+            <% true -> %>
+              Member
+          <% end %>
+        </span>
       </div>
 
-      <nav class="flex gap-4 items-center mt-12 border-t border-zinc-200 dark:border-zinc-800 pt-4 text-zinc-600 dark:text-zinc-400">
+      <div>
+        <%= cond do %>
+          <% Enum.any?(@current_user.inbound_friendships, &(&1.user_id == user.id && &1.status == :pending)) -> %>
+            <.button
+              phx-click="accept_friendship"
+              phx-value-id={user.id}
+              <%!-- 5. Removed hardcoded !bg-white so it follows component theme --%>
+              class="text-xs py-1 px-2"
+            >
+              Accept
+            </.button>
+          <%!-- ... rest of your button logic ... --%>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+      </div>
+
+      <nav class="flex gap-4 items-center mt-12 border-t pt-4">
         <%= if @current_user do %>
-          <span class="text-sm">{@current_user.email}</span>
-          <.link
-            href={~p"/sign-out"}
-            method="get"
-            class="text-sm underline hover:text-zinc-900 dark:hover:text-white"
-          >
-            Log out
-          </.link>
+          <span>{@current_user.email}</span>
+          <.link href={~p"/sign-out"} method="get" class="underline">Log out</.link>
         <% else %>
-          <.link
-            href={~p"/sign-in"}
-            class="text-sm underline hover:text-zinc-900 dark:hover:text-white"
-          >
-            Log in
-          </.link>
+          <.link href={~p"/sign-in"} class="underline">Log in</.link>
         <% end %>
       </nav>
     </Layouts.app>
@@ -145,7 +118,6 @@ defmodule FoodmapWeb.PlaceLive.Index do
 
     friends_followed_places = get_friends_places_user(user, actor)
     # IO.inspect(user)
-    IO.inspect(user)
 
     {:ok,
      socket
@@ -237,7 +209,7 @@ defmodule FoodmapWeb.PlaceLive.Index do
       ) do
     out_loaded_places = Ash.load!(out_friends, [friend: [:followed_places]], actor: actor)
 
-    in_loaded_places = Ash.load!(in_friends, [user: [:followed_places]], actor: actor)
+    in_loaded_places = Ash.load!(in_friends, [friend: [:followed_places]], actor: actor)
 
     out_places =
       out_loaded_places
@@ -246,10 +218,9 @@ defmodule FoodmapWeb.PlaceLive.Index do
 
     in_places =
       in_loaded_places
-      |> Enum.map(fn %{user: %{followed_places: followed_places}} -> followed_places end)
+      |> Enum.map(fn %{friend: %{followed_places: followed_places}} -> followed_places end)
       |> List.flatten()
 
-    IO.inspect("Samarripa")
     IO.inspect(out_places ++ in_places)
     out_places ++ in_places
   end

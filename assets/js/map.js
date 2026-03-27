@@ -25,7 +25,7 @@ export const MapHook = {
 	// click event
     this.map.on('click', (e) => {
       const { lng, lat } = e.lngLat;
-	if (window.location.pathname === "/places/new") {
+	if (window.location.pathname === "/places/new" ||  /^\/places\/[^\/]+\/edit\/?$/.test(window.location.pathname)   ) {
 	    console.log("Map clicked on /places/new at:", lat, lng);
 	    this.pushEvent("map_clicked", { lat: lat, lng: lng });
 	  } else {

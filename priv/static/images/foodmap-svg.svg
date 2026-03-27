@@ -1,15 +1,44 @@
-<svg width="450" height="100" viewBox="0 0 450 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g transform="translate(10, 20)">
-    <path d="M20 40C20 28.9543 28.9543 20 40 20C51.0457 20 60 28.9543 60 40C60 55 40 75 40 75C40 75 20 55 20 40Z" fill="#84cc16"/>
-    <circle cx="40" cy="40" r="6" fill="white"/>
-  </g>
 
-  <text x="80" y="70" font-family="Arial, sans-serif" font-weight="900" font-size="64" fill="#1e3a8a">Foodmap</text>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 250" xml:space="preserve">
+<style type="text/css">
+  /* 1. New Font: Rounded and friendly for a "Foodie" vibe */
+  .st-text {
+    fill: #FFFFFF; 
+    stroke: #18181B; 
+    stroke-width: 10; 
+    stroke-linejoin: round;
+    font-family: 'Segoe UI', 'Verdana', sans-serif;
+    font-size: 155px;
+    font-weight: 900;
+    letter-spacing: -2px;
+  }
+  /* 2. Marker: Keeping the pastel green for brand consistency */
+  .st-marker {
+    fill: #A3E635; 
+    stroke: #18181B;
+    stroke-width: 9;
+    stroke-linejoin: round;
+  }
+  /* 3. The Bird: A clean, "Swift" silhouette */
+  .st-bird {
+    fill: #38BDF8; 
+    stroke: #18181B;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>
+
+<rect width="1100" height="250" fill="none"/>
+
+<g transform="translate(40, 25)">
+  <path class="st-marker" d="M80,20c-30,0-55,25-55,55s25,55,25,55s55,70,55,70s55-70,55-70s25-25,25-55S110,20,80,20z M80,95c-12,0-22-10-22-22s10-22,22-22s22,10,22,22S92,95,80,95z"/>
   
-  <g transform="translate(360, 35) scale(0.8)">
-    <path d="M50 15L15 40H0L15 45L10 60L20 55L30 45H60C70 45 75 35 60 30L50 15Z" fill="#3b82f6"/>
-    <path d="M25 40L40 10H50L40 40H25Z" fill="#60a5fa"/> <path d="M25 45L35 65H45L40 45H25Z" fill="#2563eb"/> <path d="M55 15C55 10 60 5 65 5C70 5 75 10 75 15V20H55V15Z" fill="white" stroke="#1e3a8a" stroke-width="2"/>
+  <text x="215" y="160" class="st-text">Foodmap</text>
+
+  <g transform="translate(880, 50) scale(1.4)">
+    <path class="st-bird" d="M10,60 C30,50 50,0 80,20 C60,30 50,50 50,60 C70,70 100,80 80,100 C60,90 40,70 10,60 Z"/>
+    <path class="st-bird" d="M45,55 C40,30 20,20 10,10 C30,20 45,40 45,55 Z" fill="#7DD3FC"/>
   </g>
-  
-  <path d="M345 60C350 60 355 55 360 50" stroke="#1e3a8a" stroke-width="3" stroke-dasharray="4 4" stroke-linecap="round"/>
+</g>
 </svg>

@@ -28,7 +28,9 @@ defmodule FoodmapWeb.PlaceLive.Form do
         <.input field={@form[:lat]} type="text" label="Latitude" />
         <.input field={@form[:lng]} type="text" label="Longitude" />
 
-        <.button phx-disable-with="Saving..." variant="primary">Save Place</.button>
+        <.button phx-disable-with="Processing...">
+          {if @action == :update, do: "Update Place", else: "Save Place"}
+        </.button>
         <.button navigate={return_path(@return_to, @place)}>Cancel</.button>
       </.form>
     </Layouts.app>
@@ -45,13 +47,25 @@ defmodule FoodmapWeb.PlaceLive.Form do
 
     action = if is_nil(place), do: "New", else: "Edit"
     page_title = action <> " " <> "Place"
+    action = if is_nil(place), do: :save, else: :update
+    {lat, lng} = mount_market_position(action, place)
 
     {:ok,
      socket
      |> assign(:return_to, return_to(params["return_to"]))
      |> assign(place: place)
      |> assign(:page_title, page_title)
+     |> assign(:action, action)
+     |> push_event("set_marker", %{lat: lat, lng: lng})
      |> assign_form()}
+  end
+
+  def mount_market_position(action, place) do
+    if action == :save do
+      {24.941, 60.170}
+    else
+      {place.lat, place.lng}
+    end
   end
 
   defp return_to("show"), do: "show"
