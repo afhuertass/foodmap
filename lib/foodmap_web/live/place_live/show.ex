@@ -10,12 +10,15 @@ defmodule FoodmapWeb.PlaceLive.Show do
         <:subtitle>This is a place record from your database.</:subtitle>
 
         <:actions>
-          <.button navigate={~p"/places"}>
+          <.button navigate={~p"/places"} variant="primary">
             <.icon name="hero-arrow-left" />
           </.button>
-          <.button variant="primary" navigate={~p"/places/#{@place}/edit?return_to=show"}>
-            <.icon name="hero-pencil-square" /> Edit Place
-          </.button>
+
+          <%= if @followed_by_me do %>
+            <.button variant="primary" navigate={~p"/places/#{@place}/edit?return_to=show"}>
+              <.icon name="hero-pencil-square" /> Edit Place
+            </.button>
+          <% end %>
         </:actions>
       </.header>
 
@@ -38,13 +41,19 @@ defmodule FoodmapWeb.PlaceLive.Show do
   @impl true
   def mount(%{"id" => id}, _session, socket) do
     place = Ash.get!(Foodmap.Maps.Place, id, actor: socket.assigns.current_user)
-    aaa = Ash.load(place, :follower_relationships, actor: socket.assigns.current_user)
+
+    {:ok, aaa} =
+      Ash.load(place, [:follower_relationships, :followed_by_me],
+        actor: socket.assigns.current_user
+      )
+
     IO.inspect(aaa)
 
     {:ok,
      socket
      |> assign(:page_title, "Show Place")
      |> push_event("set_marker", %{lat: place.lat, lng: place.lng})
+     |> assign(:followed_by_me, aaa.followed_by_me)
      |> assign(:place, Ash.get!(Foodmap.Maps.Place, id, actor: socket.assigns.current_user))}
   end
 end
